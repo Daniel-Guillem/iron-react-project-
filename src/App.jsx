@@ -1,6 +1,12 @@
+import Navbar from "./components/ui/navbar/navbar"
+
 function App() {
 
-  return 
+  return (
+  <>
+   <Navbar />
+   </>
+  )
 }
 
 export default App
