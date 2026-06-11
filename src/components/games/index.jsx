@@ -1,0 +1,1 @@
+export { default as GamesList } './game-list/'
