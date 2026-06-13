@@ -1,15 +1,21 @@
-import { Jumbotron, Navbar } from "../../ui"
+import { Jumbotron } from "../../ui"
 
-function PageLayout({ children, jumbotron, className = "" }) {
-  return (
-    <>
-      <Navbar />  {/* ← Agregar aquí */}
-      {jumbotron && (<Jumbotron {...jumbotron} />)}
-      <div className={`container py-3 ${className}`}>
-        {children}
-      </div>
-    </>
-  )
+const jumbotron = {
+    backgroundImage: '',
+    title: 'Hola',
+    subtitle: 'Mundo'
+}
+
+function PageLayout({ children, jumbotron, className = "" }){
+
+    return (
+        <>
+        {jumbotron && (<Jumbotron {...jumbotron} />)}
+        <div className={`container py-3 ${className}`}>
+            {children}
+        </div>
+        </>
+    )
 }
 
 export default PageLayout
