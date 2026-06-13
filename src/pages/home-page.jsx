@@ -3,17 +3,19 @@ import JumboBg from "../assets/images/background/mario.jpg"
 import GamesList from "../components/games/game-list/game-list"
 
 function HomePage() {
-    return (
-        <PageLayout
+  return (
+    <div style={{ backgroundColor: '#0e0e1d', minHeight: '100vh', color: '#ffffff' }}>
+      <PageLayout
         jumbotron={{
-            backgroundImage:JumboBg,
-            title: 'Buy now',
-            subtitle: 'find all your favorite games'
-            }}>  
-            <p>Lorem ipsum</p>
-            <GamesList />
-        </PageLayout>
-    )
+          backgroundImage: JumboBg,
+          title: 'Level up your library',
+          subtitle: 'Discover thousands of games and your next obsession.'
+        }}>
+        <p></p>
+        <GamesList />
+      </PageLayout>
+    </div>
+  )
 }
 
 export default HomePage
