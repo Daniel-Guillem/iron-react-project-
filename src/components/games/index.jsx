@@ -1,1 +1,1 @@
-export { default as GamesList } './game-list/'
+export { default as GamesList } from './game-list/game-list'

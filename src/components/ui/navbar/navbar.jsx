@@ -11,7 +11,7 @@ function Navbar() {
         </button>
         <div className="collapse navbar-collapse" id="main-navbar">
           <span className="navbar-text" style={{ color: '#a5b4fc' }}>
-            Top 1 videogames store
+            The home of the great games
           </span>
         </div>
       </div>
