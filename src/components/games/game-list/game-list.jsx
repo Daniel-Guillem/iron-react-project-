@@ -1,169 +1,39 @@
-import { useEffect, useState, useCallback } from "react"
-import * as rawgService from "../../../services/rawg-service"
+import { useEffect, useState } from "react"
+import * as rawgService from "../../../services/rawg-service" 
 import GamesItem from "../games-item/games-item"
 
-const PAGE_SIZE = 20
+function GamesList () {
+const [games, setGames]= useState([])
 
-function useDebounce(value, delay) {
-  const [debounced, setDebounced] = useState(value)
-  useEffect(() => {
-    const timer = setTimeout(() => setDebounced(value), delay)
-    return () => clearTimeout(timer)
-  }, [value, delay])
-  return debounced
-}
-
-function GamesList() {
-  const [games, setGames] = useState([])
-  const [page, setPage] = useState(1)
-  const [totalCount, setTotalCount] = useState(0)
-  const [hasNext, setHasNext] = useState(false)
-  const [hasPrev, setHasPrev] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(null)
-  const [search, setSearch] = useState("")
-
-  const debouncedSearch = useDebounce(search, 400)
-
-  useEffect(() => {
-    setPage(1)
-  }, [debouncedSearch])
-
-  useEffect(() => {
-    async function fetchGames() {
-      setLoading(true)
-      setError(null)
-      try {
-        const result = await rawgService.listGames(page, debouncedSearch)
-        setGames(result.games)
-        setTotalCount(result.count)
-        setHasNext(!!result.next)
-        setHasPrev(!!result.previous)
-        window.scrollTo({ top: 0, behavior: "smooth" })
-      } catch (err) {
-        console.error(err)
-        setError("")
-      } finally {
-        setLoading(false)
-      }
+useEffect (() => {
+  async function fetchGames() {
+    try{
+      const games = await rawgService.listGames()
+      console.log(games)
+      setGames(games)
+    } catch(error) {
+      console.error(error)
     }
 
-    fetchGames()
-  }, [page, debouncedSearch])
+  }
 
-  const totalPages = Math.ceil(totalCount / PAGE_SIZE)
+fetchGames()
+}, [])
 
-  return (
-    <>
-      <div className="d-flex align-items-center justify-content-between mb-3">
-        <h3 className="m-0">Game list</h3>
-        {totalCount > 0 && (
-          <span style={{ color: "#a5b4fc", fontSize: "0.9rem" }}>
-            Página {page} de {totalPages.toLocaleString()} — {totalCount.toLocaleString()} juegos en total
-          </span>
-        )}
+return(
+<>
+<h3>Game list</h3>
+<p></p>
+<p></p>
+ <div className="row">
+    {games.map((game) => (
+      <div key={game.id} className="col-md-6">
+        <GamesItem game={game} />
       </div>
-
-      <div className="mb-4 d-flex justify-content-center">
-        <div className="position-relative" style={{ width: "400px" }}>
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Buscar juegos..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            style={{
-              backgroundColor: "#ffffff",
-              border: "1px solid #4f46e5",
-              color: "#000000",
-              borderRadius: "8px",
-              paddingLeft: "2.5rem",
-            }}
-          />
-          <span
-            style={{
-              position: "absolute",
-              left: "0.75rem",
-              top: "50%",
-              transform: "translateY(-50%)",
-              color: "#6b7280",
-              pointerEvents: "none",
-            }}
-          >
-            🔍
-          </span>
-          {search && (
-            <button
-              onClick={() => setSearch("")}
-              style={{
-                position: "absolute",
-                right: "0.75rem",
-                top: "50%",
-                transform: "translateY(-50%)",
-                background: "none",
-                border: "none",
-                color: "#6b7280",
-                cursor: "pointer",
-                fontSize: "1rem",
-                lineHeight: 1,
-              }}
-            >
-              ✕
-            </button>
-          )}
-        </div>
-      </div>
-
-      {error && (
-        <div className="alert alert-danger">{error}</div>
-      )}
-
-      {loading ? (
-        <div className="d-flex justify-content-center align-items-center py-5">
-          <div className="spinner-border text-light" role="status">
-            <span className="visually-hidden">Cargando...</span>
-          </div>
-          <span className="ms-3 text-white">Cargando juegos...</span>
-        </div>
-      ) : games.length === 0 ? (
-        <div className="text-center py-5" style={{ color: "#a5b4fc" }}>
-          No se encontraron juegos para "{debouncedSearch}".
-        </div>
-      ) : (
-        <div className="row">
-          {games.map((game) => (
-            <div key={game.id} className="col-md-6">
-              <GamesItem game={game} />
-            </div>
-          ))}
-        </div>
-      )}
-
-      <div className="d-flex justify-content-center align-items-center gap-3 py-4 mt-2">
-        <button
-          className="btn btn-outline-light px-4"
-          onClick={() => setPage((p) => p - 1)}
-          disabled={!hasPrev || loading}
-          style={{ borderColor: "#4f46e5", color: "#a5b4fc" }}
-        >
-          ← Página anterior
-        </button>
-
-        <span style={{ color: "#a5b4fc", minWidth: "100px", textAlign: "center" }}>
-          {page} / {totalPages > 0 ? totalPages.toLocaleString() : "…"}
-        </span>
-
-        <button
-          className="btn px-4"
-          onClick={() => setPage((p) => p + 1)}
-          disabled={!hasNext || loading}
-          style={{ backgroundColor: "#4f46e5", color: "#ffffff", border: "none" }}
-        >
-          Siguiente página →
-        </button>
-      </div>
-    </>
-  )
+    ))}
+  </div>
+</>
+)
 }
 
 export default GamesList

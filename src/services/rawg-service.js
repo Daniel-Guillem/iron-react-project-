@@ -16,14 +16,7 @@ function parseGame(game) {
     }
 }
 
-export async function listGames(page = 1, search = "") {
-    const params = { page }
-    if (search.trim()) params.search = search.trim()
-    const { data } = await http.get('/games', { params })
-    return {
-        games: data.results?.map((game) => parseGame(game)) ?? [],
-        count: data.count ?? 0,
-        next: data.next,
-        previous: data.previous,
-    }
-}
+export async function listGames() {
+    const { data }  = await http.get('/games')
+    return data.results?.map((game) => parseGame(game)) ?? [];
+} 
