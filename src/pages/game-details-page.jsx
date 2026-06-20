@@ -63,6 +63,9 @@ function GameDetailsPage() {
                   <p className="card-text">
                     Stores: {game.stores.join(", ")}
                   </p>
+                  <p className="card-text">
+                    Number of Players: {game.players_numbers}
+                  </p>
 
                   <Link to="/" className="btn btn-primary mt-3">
                     Back
