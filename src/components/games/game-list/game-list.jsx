@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react"
+import { useEffect, useState } from "react"
 import * as rawgService from "../../../services/rawg-service"
 import GamesItem from "../games-item/games-item"
 
@@ -6,14 +6,16 @@ const PAGE_SIZE = 20
 
 function useDebounce(value, delay) {
   const [debounced, setDebounced] = useState(value)
+
   useEffect(() => {
     const timer = setTimeout(() => setDebounced(value), delay)
     return () => clearTimeout(timer)
   }, [value, delay])
+
   return debounced
 }
 
-function GamesList() {
+function GamesList({ favorites, onToggleFavorite }) {
   const [games, setGames] = useState([])
   const [page, setPage] = useState(1)
   const [totalCount, setTotalCount] = useState(0)
@@ -33,6 +35,7 @@ function GamesList() {
     async function fetchGames() {
       setLoading(true)
       setError(null)
+
       try {
         const result = await rawgService.listGames(page, debouncedSearch)
         setGames(result.games)
@@ -59,7 +62,7 @@ function GamesList() {
         <h3 className="m-0">Game list</h3>
         {totalCount > 0 && (
           <span style={{ color: "#a5b4fc", fontSize: "0.9rem" }}>
-            Página {page} de {totalPages.toLocaleString()} — {totalCount.toLocaleString()} juegos en total
+            Page {page} of {totalPages.toLocaleString()} - {totalCount.toLocaleString()} games total
           </span>
         )}
       </div>
@@ -69,7 +72,7 @@ function GamesList() {
           <input
             type="text"
             className="form-control"
-            placeholder="Buscar juegos..."
+            placeholder="Search games..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             style={{
@@ -77,21 +80,9 @@ function GamesList() {
               border: "1px solid #4f46e5",
               color: "#000000",
               borderRadius: "8px",
-              paddingLeft: "2.5rem",
+              paddingLeft: "1rem",
             }}
           />
-          <span
-            style={{
-              position: "absolute",
-              left: "0.75rem",
-              top: "50%",
-              transform: "translateY(-50%)",
-              color: "#6b7280",
-              pointerEvents: "none",
-            }}
-          >
-            🔍
-          </span>
           {search && (
             <button
               onClick={() => setSearch("")}
@@ -108,7 +99,7 @@ function GamesList() {
                 lineHeight: 1,
               }}
             >
-              ✕
+              x
             </button>
           )}
         </div>
@@ -121,19 +112,23 @@ function GamesList() {
       {loading ? (
         <div className="d-flex justify-content-center align-items-center py-5">
           <div className="spinner-border text-light" role="status">
-            <span className="visually-hidden">Cargando...</span>
+            <span className="visually-hidden">Loading...</span>
           </div>
-          <span className="ms-3 text-white">Cargando juegos...</span>
+          <span className="ms-3 text-white">Loading games...</span>
         </div>
       ) : games.length === 0 ? (
         <div className="text-center py-5" style={{ color: "#a5b4fc" }}>
-          No se encontraron juegos para "{debouncedSearch}".
+          No games found for "{debouncedSearch}".
         </div>
       ) : (
         <div className="row">
           {games.map((game) => (
             <div key={game.id} className="col-md-6">
-              <GamesItem game={game} />
+              <GamesItem
+                game={game}
+                favorites={favorites}
+                onToggleFavorite={onToggleFavorite}
+              />
             </div>
           ))}
         </div>
@@ -146,11 +141,11 @@ function GamesList() {
           disabled={!hasPrev || loading}
           style={{ borderColor: "#4f46e5", color: "#a5b4fc" }}
         >
-          ← Página anterior
+          Previous page
         </button>
 
         <span style={{ color: "#a5b4fc", minWidth: "100px", textAlign: "center" }}>
-          {page} / {totalPages > 0 ? totalPages.toLocaleString() : "…"}
+          {page} / {totalPages > 0 ? totalPages.toLocaleString() : "..."}
         </span>
 
         <button
@@ -159,7 +154,22 @@ function GamesList() {
           disabled={!hasNext || loading}
           style={{ backgroundColor: "#4f46e5", color: "#ffffff", border: "none" }}
         >
-          Siguiente página →
+          Next page
+        </button>
+      </div>
+
+      <div className="d-flex justify-content-center pb-4">
+        <button
+          className="btn px-4"
+          onClick={() => setPage(1)}
+          disabled={page === 1 || loading}
+          style={{
+            border: "none",
+            color: "#ffffff",
+            backgroundColor: "#4f46e5",
+          }}
+        >
+          Back to page 1
         </button>
       </div>
     </>

@@ -15,5 +15,41 @@ function App() {
   )
 }
 
-export default App
+      return [...currentFavorites, game]
+    })
+  }
+
+  return (
+    <>
+      <Navbar />
+
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <HomePage
+              favorites={favorites}
+              onToggleFavorite={toggleFavorite}
+            />
+          }
+        />
+
+        <Route
+          path="/games/:gameId"
+          element={<GameDetailsPage />}
+        />
+
+        <Route
+          path="/favorites"
+          element={
+            <FavoritesPage
+              favorites={favorites}
+              onToggleFavorite={toggleFavorite}
+            />
+          }
+        />
+      </Routes>
+    </>
+  )
+}
 

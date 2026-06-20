@@ -12,14 +12,15 @@ function GamesItem({ game: { id, name, background_image, rating, genres, release
     >
     <div></div>
       <div className="row g-0">
-        <div className="col-md-4">
+        <div className="col-md-4 d-flex">
           <img
             src={background_image}
             className="img-fluid rounded-start"
                 alt={name}
                     style={{
                         width: "100%",
-                        height: "150px",
+                        height: "100%",
+                        minHeight: "150px",
                         objectFit: "cover"
                     }}
           />
