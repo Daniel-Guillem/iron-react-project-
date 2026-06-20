@@ -13,6 +13,14 @@ function parseGame(game) {
         background_image: game.background_image,
         rating: game.rating,
         genres: game.genres[0].name,
+        platforms:
+        game.platforms?.map(
+            item => item.platform.name
+        ) ?? [],
+        stores:
+        game.stores?.map(
+         item => item.store.name
+        ) ?? []
     }
 }
 
@@ -25,5 +33,19 @@ export async function listGames(page = 1, search = "") {
         count: data.count ?? 0,
         next: data.next,
         previous: data.previous,
+    }
+}
+
+export async function getGame (gameId) {
+    const { data } = await http.get(`/games/${gameId}`)
+    return {
+        id: data.id,
+        name: data.name,
+        released: data.released,
+        background_image: data.background_image,
+        rating: data.rating,
+        genres: data.genres[0].name,
+        platforms: data.platforms.map(game => game.platform.name),
+        stores: data.stores.map(game => game.store.name),
     }
 }

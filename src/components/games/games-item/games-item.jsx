@@ -1,6 +1,12 @@
+import { Link } from "react-router-dom";
+
 function GamesItem({ game: { id, name, background_image, rating, genres, released } }) {
   return (
-    <div
+    
+    <Link
+  to={`/games/${id}`} className="d-block text-decoration-none text-reset">
+    
+  <div
       className="card mb-2"
     
     >
@@ -37,6 +43,7 @@ function GamesItem({ game: { id, name, background_image, rating, genres, release
         </div>
       </div>
     </div>
+    </Link>
   );
 }
 
