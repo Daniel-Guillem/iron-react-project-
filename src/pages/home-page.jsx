@@ -2,7 +2,7 @@ import PageLayout from "../components/layouts/page-layout/page-layout"
 import JumboBg from "../assets/images/background/mario.jpg"
 import GamesList from "../components/games/game-list/game-list"
 
-function HomePage() {
+function HomePage({ favorites, onToggleFavorite,}) {
   return (
     <div style={{ backgroundColor: '#0e0e1d', minHeight: '100vh', color: '#ffffff' }}>
       <PageLayout
@@ -12,7 +12,7 @@ function HomePage() {
           subtitle: 'Discover thousands of games and your next obsession.'
         }}>
         <p></p>
-        <GamesList />
+        <GamesList  favorites={favorites} onToggleFavorite={onToggleFavorite}/>
       </PageLayout>
     </div>
   )
