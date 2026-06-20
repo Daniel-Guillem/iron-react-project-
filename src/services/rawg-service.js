@@ -12,7 +12,7 @@ function parseGame(game) {
         released: game.released,
         background_image: game.background_image,
         rating: game.rating,
-        genres: game.genres?.[0]?.name ?? "Unknown",
+        genres: game.genres[0].name,
         platforms:
         game.platforms?.map(
             item => item.platform.name
@@ -20,14 +20,12 @@ function parseGame(game) {
         stores:
         game.stores?.map(
          item => item.store.name
-        ) ?? [],
-        players_numbers: game.tags?.[0]?.name ?? "",
-
+        ) ?? []
     }
 }
 
 export async function listGames(page = 1, search = "") {
-    const params = { page, page_size: 20 }
+    const params = { page }
     if (search.trim()) params.search = search.trim()
     const { data } = await http.get('/games', { params })
     return {
@@ -49,7 +47,5 @@ export async function getGame (gameId) {
         genres: data.genres[0].name,
         platforms: data.platforms.map(game => game.platform.name),
         stores: data.stores.map(game => game.store.name),
-        players_numbers: data.tags[0].name
-
     }
 }

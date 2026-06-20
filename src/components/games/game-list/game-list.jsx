@@ -25,50 +25,33 @@ function GamesList({ favorites, onToggleFavorite }) {
   const [error, setError] = useState(null)
   const [search, setSearch] = useState("")
 
-  const debouncedSearch = useDebounce(search, 250)
-  const filterSelectStyle = {
-    backgroundColor: "#111122",
-    border: "1px solid #4f46e5",
-    borderRadius: "8px",
-    color: "#ffffff",
-    minWidth: "150px",
-    padding: "0.375rem 2rem 0.375rem 0.75rem",
-    boxShadow: "0 0 10px rgba(79, 70, 229, 0.22)",
-  }
+  const debouncedSearch = useDebounce(search, 400)
 
   useEffect(() => {
-    let ignoreResponse = false
+    setPage(1)
+  }, [debouncedSearch])
 
+  useEffect(() => {
     async function fetchGames() {
       setLoading(true)
       setError(null)
 
       try {
         const result = await rawgService.listGames(page, debouncedSearch)
-        if (ignoreResponse) return
-
         setGames(result.games)
         setTotalCount(result.count)
         setHasNext(!!result.next)
         setHasPrev(!!result.previous)
         window.scrollTo({ top: 0, behavior: "smooth" })
       } catch (err) {
-        if (ignoreResponse) return
-
         console.error(err)
-        setError("There was a problem searching games.")
+        setError("")
       } finally {
-        if (!ignoreResponse) {
-          setLoading(false)
-        }
+        setLoading(false)
       }
     }
 
     fetchGames()
-
-    return () => {
-      ignoreResponse = true
-    }
   }, [page, debouncedSearch])
 
   const totalPages = Math.ceil(totalCount / PAGE_SIZE)
@@ -84,17 +67,14 @@ function GamesList({ favorites, onToggleFavorite }) {
         )}
       </div>
 
-      <div className="mb-4 d-flex align-items-center gap-2 flex-wrap">
+      <div className="mb-4 d-flex justify-content-center">
         <div className="position-relative" style={{ width: "400px" }}>
           <input
             type="text"
             className="form-control"
             placeholder="Search games..."
             value={search}
-            onChange={(e) => {
-              setSearch(e.target.value)
-              setPage(1)
-            }}
+            onChange={(e) => setSearch(e.target.value)}
             style={{
               backgroundColor: "#ffffff",
               border: "1px solid #4f46e5",
@@ -123,49 +103,6 @@ function GamesList({ favorites, onToggleFavorite }) {
             </button>
           )}
         </div>
-        
-<div>
-
-  <select style={filterSelectStyle}>
-    <option value="">Platforms</option>
-    <option value="pc">PC</option>
-    <option value="playstation5">PlayStation 5</option>
-    <option value="playstation4">PlayStation 4</option>
-    <option value="xbox-series-x">Xbox Series X</option>
-    <option value="xbox-one">Xbox One</option>
-    <option value="ios">iOS</option>
-    <option value="nintendo">Nintendo</option>
-    <option value="nintendo-switch">Nintendo Switch</option>
-  </select>
-
-</div>
-
-<div>
-
-  <select style={filterSelectStyle}>
-    <option value="">Genre</option>
-    <option value="action">Action</option>
-    <option value="strategy">Strategy</option>
-    <option value="role-playing-games-rpg">RPG</option>
-    <option value="shooter">Shooter</option>
-    <option value="adventure">Adventure</option>
-    <option value="puzzle">Puzzle</option>
-    <option value="racing">Racing</option>
-    <option value="sports">Sports</option>
-  </select>
-
-</div>
-
-<div>
-
-  <select style={{ ...filterSelectStyle, minWidth: "190px" }}>
-    <option value="">Number of Players</option>
-    <option value="singleplayer">Singleplayer</option>
-    <option value="multiplayer">Multiplayer</option>
-  </select>
-
-</div>
-
       </div>
 
       {error && (

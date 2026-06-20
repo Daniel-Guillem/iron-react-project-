@@ -1,41 +1,19 @@
-import { HomePage, GameDetailsPage, FavoritesPage } from './pages'
+import { HomePage, GameDetailsPage } from './pages'
 import { Routes, Route } from 'react-router-dom'
 import { Navbar } from './components/ui'
-import { useEffect, useState } from "react";
-
-function getStoredFavorites() {
-  try {
-    const storedFavorites = localStorage.getItem("favoriteGames")
-
-    return storedFavorites
-      ? JSON.parse(storedFavorites)
-      : []
-  } catch {
-    return []
-  }
-} 
 
 function App() {
-  const [favorites, setFavorites] = useState(getStoredFavorites)
+  return (
+  <>
+  <Navbar />
 
-  useEffect(() => {
-    localStorage.setItem(
-      "favoriteGames",
-      JSON.stringify(favorites)
-    )
-  }, [favorites])
-
-  function toggleFavorite(game) {
-    setFavorites((currentFavorites) => {
-      const isAlreadyFavorite = currentFavorites.some(
-        (favorite) => favorite.id === game.id
-      )
-
-      if (isAlreadyFavorite) {
-        return currentFavorites.filter(
-          (favorite) => favorite.id !== game.id
-        )
-      }
+  <Routes>
+    <Route path="/" element={<HomePage />} />
+    <Route path="/games/:gameId" element={<GameDetailsPage />}/>
+  </Routes>
+  </>
+  )
+}
 
       return [...currentFavorites, game]
     })
@@ -75,4 +53,3 @@ function App() {
   )
 }
 
-export default App
