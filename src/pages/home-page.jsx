@@ -1,5 +1,5 @@
 import PageLayout from "../components/layouts/page-layout/page-layout"
-import JumboBg from "../assets/images/background/mario.jpg"
+import JumboBg from "../assets/images/background/mario.png"
 import GamesList from "../components/games/game-list/game-list"
 
 function HomePage({ favorites, onToggleFavorite,}) {
