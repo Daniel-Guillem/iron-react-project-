@@ -1,6 +1,13 @@
 import { useEffect, useState } from "react"
 import * as rawgService from "../../../services/rawg-service"
 import GamesItem from "../games-item/games-item"
+import MultiFilterDropdown from "../../filters/multi-filter-dropdown"
+import {
+  PLATFORM_OPTIONS,
+  GENRE_OPTIONS,
+  PLAYERS_OPTIONS,
+  FILTER_SELECT_STYLE,
+} from "../../filters/filter-options"
 
 const PAGE_SIZE = 20
 
@@ -116,41 +123,6 @@ function GamesList({ favorites, onToggleFavorite }) {
 
   const debouncedSearch = useDebounce(search, 250)
   const hasActiveFilters = search.trim() || platform.length > 0 || genre.length > 0 || players.length > 0
-  const platformOptions = [
-    { value: "4", label: "PC" },
-    { value: "187", label: "PlayStation 5" },
-    { value: "18", label: "PlayStation 4" },
-    { value: "186", label: "Xbox Series X" },
-    { value: "1", label: "Xbox One" },
-    { value: "3", label: "iOS" },
-    { value: "83", label: "Nintendo 3DS" },
-    { value: "7", label: "Nintendo Switch" },
-  ]
-  const genreOptions = [
-    { value: "action", label: "Action" },
-    { value: "strategy", label: "Strategy" },
-    { value: "role-playing-games-rpg", label: "RPG" },
-    { value: "shooter", label: "Shooter" },
-    { value: "adventure", label: "Adventure" },
-    { value: "puzzle", label: "Puzzle" },
-    { value: "racing", label: "Racing" },
-    { value: "sports", label: "Sports" },
-    { value: "platformer", label: "Platformer" },
-  ]
-  const playersOptions = [
-    { value: "singleplayer", label: "Singleplayer" },
-    { value: "multiplayer", label: "Multiplayer" },
-  ]
-
-  const filterSelectStyle = {
-    backgroundColor: "#111122",
-    border: "1px solid #4F46E5",
-    borderRadius: "8px",
-    color: "#FFFFFF",
-    minWidth: "190px",
-    padding: "0.375rem 2rem 0.375rem 0.75rem",
-    boxShadow: "0 0 10px rgba(79, 70, 229, 0.22)",
-  }
 
   function deleteAllFilters() {
     setSearch("")
@@ -245,42 +217,42 @@ function GamesList({ favorites, onToggleFavorite }) {
           )}
         </div>
 
-        {/* Platform filter — RAWG usa IDs numéricos para plataformas */}
+        {/* Platform filter */}
         <MultiFilterDropdown
           label="All Platforms"
-          options={platformOptions}
+          options={PLATFORM_OPTIONS}
           selectedValues={platform}
           onChange={(values) => {
             setPlatform(values)
             setPage(1)
           }}
-          style={filterSelectStyle}
+          style={FILTER_SELECT_STYLE}
         />
 
-        {/* Genre filter — RAWG usa slugs para géneros */}
+        {/* Genre filter */}
         <MultiFilterDropdown
           label="All Genre"
-          options={genreOptions}
+          options={GENRE_OPTIONS}
           selectedValues={genre}
           onChange={(values) => {
             setGenre(values)
             setPage(1)
           }}
-          style={filterSelectStyle}
+          style={FILTER_SELECT_STYLE}
         />
 
-        {/* Players filter — RAWG usa tags para singleplayer/multiplayer */}
+        {/* Players filter */}
         <MultiFilterDropdown
           label="Players"
-          options={playersOptions}
+          options={PLAYERS_OPTIONS}
           selectedValues={players}
           onChange={(values) => {
             setPlayers(values)
             setPage(1)
           }}
-          style={filterSelectStyle}
+          style={FILTER_SELECT_STYLE}
         />
-        
+
         {hasActiveFilters && (
           <div>
             <button
