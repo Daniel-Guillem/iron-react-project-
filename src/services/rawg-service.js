@@ -49,7 +49,9 @@ export async function listGames(page = 1, search = "", platform = "", genre = ""
     next: data.next,
     previous: data.previous,
   }
+
 }
+
 
 export async function getGame (gameId) {
     const { data } = await http.get(`/games/${gameId}`)
