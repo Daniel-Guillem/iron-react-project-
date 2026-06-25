@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 
-// Mapeo de géneros a colores para el badge
 const GENRE_COLORS = {
   Action:     { bg: "rgba(239,68,68,0.18)",   text: "#f87171" },
   Shooter:    { bg: "rgba(249,115,22,0.18)",  text: "#fb923c" },
